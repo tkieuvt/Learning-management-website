@@ -1,0 +1,147 @@
+{% extends 'base-admin.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<style xmlns:text-decoration="http://www.w3.org/1999/xhtml">
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .search-bar input {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .course-container { display: flex; flex-wrap: wrap; gap: 15px; }
+    .course-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        width: 300px;
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .course-name { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+    .course-description {
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+    }
+    .teacher-info {
+        font-style: italic; color: #555;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        overflow: hidden;
+        white-space: normal;
+    }
+    h2{
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #5c6bc0;
+        border-bottom: 2px solid;
+        margin: 1.5rem 0 1rem;
+        padding: 8px 0;
+    }
+</style>
+<div class="container">
+  {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <!-- Chỉ hiển thị thông báo gần nhất (vòng lặp sẽ chỉ lấy thông báo đầu tiên) -->
+            {% if forloop.first %}
+                <div class="alert alert-{{ message.tags }}" id="message-{{ forloop.counter }}">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- JavaScript để ẩn thông báo sau 3 giây -->
+    <script>
+        window.onload = function() {
+            // Chỉ lấy thông báo gần nhất
+            var message = document.querySelector('.alert');
+            if (message) {
+                // Đợi 3 giây rồi bắt đầu ẩn thông báo
+                setTimeout(function() {
+                    message.style.transition = "opacity 1s";
+                    message.style.opacity = "0"; // Tạo hiệu ứng mờ dần
+                    setTimeout(function() {
+                        message.style.display = "none"; // Ẩn thông báo sau khi opacity đã trở về 0
+                    }, 1000);  // Đợi 1 giây để opacity chuyển về 0 trước khi ẩn
+                }, 500);  // Sau 3 giây
+            }
+        };
+    </script>
+{% endif %}
+
+    <!-- Header -->
+    <div class="header">
+      <h2>Danh sách khóa học</h2>
+    </div>
+
+    <!-- Search Bar -->
+    <form method="get" class="search-bar"
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+      <div style="position:relative; max-width:500px; width:100%;">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search courses"
+          value="{{ q }}"
+          style="width:100%; padding:0.5rem 1rem 0.5rem 2.5rem; border:1px solid #e2e8f0; border-radius:0.375rem;"
+        />
+        <!-- icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"
+             style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#9ca3af;">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <!-- Nút thêm khóa học -->
+      <a href="{% url 'admin_themkhoahoc' %}">
+        <button type="button"
+                style="background-color:#dc2626; color:white; padding:0.5rem 1.5rem; border:none; border-radius:0.375rem; cursor:pointer;">
+          Thêm khóa học
+        </button>
+      </a>
+    </form>
+    <div class="course-container">
+        {% for course in courses %}
+            <a href="{% url 'admin_xemkhoahoc' course.course_id %}" style="text-decoration: none; color: inherit;">
+                <div class="course-card">
+                    <div class="course-name">{{ course.course_name }}</div>
+                    <div class="course-description">{{ course.description|default:"Không có mô tả" }}</div>
+                    <div>Giá: {{ course.price|default:"Miễn phí" }} VND</div>
+                    <div class="teacher-info">
+                        {{ course.teacher_name }} - {{ course.des_teacher|default:"Chưa có mô tả" }}
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+  </div>
+{% endblock %}

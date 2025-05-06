@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Class - Mr Lam English{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+  <h1 class="page-title">Các buổi học của tôi</h1>
+  {% for lesson in lessons %}
+  <div class="lesson-section">
+    <h2 class="lesson-header">Buổi {{ lesson.lesson_id }}</h2>
+    <ul class="task-list">
+      <li class="task-item">
+        <a href="{{ lesson.lesson_file }}"
+           class="material-link {% if lesson.lesson_file == '#' %}disabled{% endif %}">
+          <span class="pdf-icon">📕</span> Tài liệu học buổi {{ lesson.lesson_id }}
+        </a>
+      </li>
+      <li class="task-item">
+        <a href="{{ lesson.exercise_file }}"
+           class="material-link {% if lesson.exercise_file == '#' %}disabled{% endif %}">
+          <span class="pdf-icon">📕</span> Bài tập buổi {{ lesson.lesson_id }}
+        </a>
+      </li>
+      <li class="task-item">
+        <a href="{% url 'student_submission' lesson.lesson_id %}" class="material-link">
+          <span class="folder-icon">📁</span> Nộp bài tập buổi {{ lesson.lesson_id }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
