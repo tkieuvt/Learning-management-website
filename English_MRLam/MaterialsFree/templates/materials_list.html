@@ -11,11 +11,23 @@
     }
 
     .custom-title {
-        font-size: 1.8rem;
-        font-weight: 700;
+        width: 96%;
+        font-size: 26px;
+        font-weight: bold;
+        text-decoration: none;
         color: #5c6bc0;
-        margin: 0.5rem 0 1rem;
+        margin-left: 40px;
+        border-bottom: 2px solid #5c6bc0;
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+        margin-top: 30px;
     }
+
+    .content-row-wrapper {
+        width: 100%;
+        margin-left: 40px;
+    }
+
     .row {
         display: flex;
         flex-wrap: wrap;
@@ -72,12 +84,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: bold;
         text-align: center;
         z-index: 2;
         padding: 10px;
         line-height: 1.2;
+        text-transform: uppercase;
     }
 
     a.stretched-link {
@@ -88,29 +101,40 @@
         bottom: 0;
         z-index: 1;
     }
+
+    @media (max-width: 768px) {
+        .card {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2 class="custom-title">Tài liệu FREE</h2>
-    <div class="row">
-        {% for doc in documents %}
-        <div class="card">
-            {% if doc.doc_name == "Bí kíp Câu hỏi đuôi" %}
-            <div class="speech-bubble">QUESTION TAGS</div>
-            {% elif doc.doc_name == "So sánh quá khứ đơn và hiện tại hoàn thành" %}
-            <div class="speech-bubble">Past Simple vs.<br>Present Perfect</div>
-            {% endif %}
-            <img src="https://sununi.edu.vn/wp-content/uploads/2021/12/english-course-930x620-1.jpg" alt="{{ doc.doc_name }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ doc.doc_name }}</h5>
-                <a href="{% url 'materials_detail' doc.doc_id %}" class="stretched-link"></a>
+    <h2 class="custom-title">TÀI LIỆU FREE </h2>
+    <div class="content-row-wrapper">
+        <div class="row">
+            {% for doc in documents %}
+            <div class="card">
+                <img src="https://sununi.edu.vn/wp-content/uploads/2021/12/english-course-930x620-1.jpg" alt="{{ doc.doc_name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ doc.doc_name }}</h5>
+                    <a href="{{ doc.doc_file.url }}" class="stretched-link" target="_blank"></a>
+                </div>
             </div>
+            {% empty %}
+            <p>Không có tài liệu nào.</p>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>Không có tài liệu nào.</p>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

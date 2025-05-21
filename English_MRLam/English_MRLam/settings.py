@@ -9,12 +9,15 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+from django.conf.global_settings import LOGIN_URL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOGOUT_REDIRECT_URL = 'login'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'english',
     'exercise_admin',
     'course_user',
@@ -51,8 +55,7 @@ INSTALLED_APPS = [
     'qrPayment',
     'registerCourse',
     'ManageClass',
-    'MaterialsFree',
-    'rest_framework',
+    'MaterialsFree'
 ]
 
 MIDDLEWARE = [
@@ -78,8 +81,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',
-
             ],
         },
     },
@@ -95,6 +96,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+                    'timeout': 20,  # Cho phép chờ lâu hơn trước khi báo lỗi locked
+                }
     }
 }
 
@@ -123,14 +127,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
 USE_I18N = True
 
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Media files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
@@ -141,13 +145,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 import os
 import os
 
 # settings.py
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'MaterialsFree', 'media')  # Đường dẫn tuyệt đối
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Cấu hình email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -157,7 +163,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'nguyenhoangatuan10b72020@gmail.com'  # Thay bằng email của bạn
 EMAIL_HOST_PASSWORD = 'axie ycom jdtb wdid'  # Thay bằng mật khẩu ứng dụng của Gmail
 DEFAULT_FROM_EMAIL = 'nguyenhoangatuan10b72020@gmail.com'  # Thay bằng email của bạn
-
-
-# MEDIA_ROOT = BASE_DIR / "media"
-# MEDIA_URL = '/media/'
+LOGIN_URL = '/'
